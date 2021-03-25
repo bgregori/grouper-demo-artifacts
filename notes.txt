@@ -1,0 +1,9 @@
+To provision schema after grouper-ui POD comes up.
+
+Make sure secret is setup with the DB connection information.
+
+Go into the terminal of the POD and run the following:
+
+cd bin/
+./gsh.sh -registry -check -runscript
+

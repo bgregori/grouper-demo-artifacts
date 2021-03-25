@@ -1,0 +1,59 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: grouper-ui
+  namespace: grouper
+  labels:
+    app: grouper-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grouper-ui
+  template:
+    metadata:
+      labels:
+        app: grouper-ui
+        role: ui
+    spec:
+      containers:
+        - name: grouper-ui
+          command:
+            - /usr/local/bin/entrypoint.sh
+          args:
+            - ui
+          env:
+            - name: GROUPER_OPENSHIFT
+              value: 'true'
+            - name: GROUPER_UI
+              value: 'true'
+            - name: GROUPER_RUN_TOMEE
+              value: 'true'
+            - name: GROUPER_RUN_PROCESSES_AS_USERS
+              value: 'false'
+            - name: GROUPER_RUN_TOMCAT_NOT_SUPERVISOR
+              value: 'true'
+            - name: TZ
+              value: America/New_York
+            - name: GC_MAX_METASPACE_SIZE
+              value: '256'
+            - name: JVM_OPTS
+              value: >-
+                -XX:+UnlockExperimentalVMOptions
+                -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -Xms64M
+            - name: GROUPER_UI_GROUPER_AUTH
+              value: 'true'
+            - name: GROUPER_WS_GROUPER_AUTH
+              value: 'true'
+            - name: GROUPER_SCIM_GROUPER_AUTH
+              value: 'true'
+          ports:
+            - containerPort: 443
+              protocol: TCP
+            - containerPort: 80
+              protocol: TCP
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: grouper-env-test
+          image: bgregorius/grouper-ui              

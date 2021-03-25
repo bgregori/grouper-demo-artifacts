@@ -1,0 +1,15 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: grouper-ui-route
+  namespace: grouper
+labels:
+  app: grouper-ui
+spec:
+  to:
+    kind: Service
+    name: grouper-ui-svc
+    weight: 100
+  port:
+    targetPort: 8080
+  
